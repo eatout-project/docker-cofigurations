@@ -1,0 +1,12 @@
+CREATE DATABASE IF NOT EXISTS db;
+GRANT ALL PRIVILEGES on db.*
+TO 'root'@'%'
+WITH GRANT OPTION;
+
+USE db;
+
+CREATE TABLE IF NOT EXISTS login (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email varchar(50),
+    hash varchar(72)
+);
