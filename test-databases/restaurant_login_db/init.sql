@@ -7,6 +7,6 @@ USE db;
 
 CREATE TABLE IF NOT EXISTS login (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    email varchar(50),
+    email varchar(100),
     hash varchar(72)
 );

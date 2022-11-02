@@ -7,6 +7,7 @@ USE db;
 
 CREATE TABLE IF NOT EXISTS restaurants (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    email varchar(100) not null,
     restaurantName varchar(50) not null,
     description varchar(200)
 );
@@ -29,7 +30,7 @@ CREATE TABLE IF NOT EXISTS menus (
 CREATE TABLE IF NOT EXISTS categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
     menuId INT not null,
-    title varchar(50) not null
+    title varchar(50)
 );
 
 CREATE TABLE IF NOT EXISTS categoryItems (
