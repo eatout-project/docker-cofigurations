@@ -5,26 +5,13 @@ WITH GRANT OPTION;
 
 USE db;
 
-CREATE TABLE IF NOT EXISTS pendingReservations (
+CREATE TABLE IF NOT EXISTS reservations (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    customerName varchar(100) not null,
     customerId int not null,
-    reservationDate Date not null,
+    restaurantId int not null,
+    restaurantName varchar(100) not null,
+    timeOfArrival varchar(20) not null,
     amountOfGuests int not null,
-    customerName varchar(100)
-);
-
-CREATE TABLE IF NOT EXISTS acceptedReservations (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    customerId int not null,
-    reservationDate Date not null,
-    amountOfGuests int not null,
-    customerName varchar(100)
-);
-
-CREATE TABLE IF NOT EXISTS declinedReservations (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    customerId int not null,
-    reservationDate Date not null,
-    amountOfGuests int not null,
-    customerName varchar(100)
+    status varchar(20) not null
 );

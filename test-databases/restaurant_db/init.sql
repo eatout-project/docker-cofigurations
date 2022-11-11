@@ -40,3 +40,9 @@ CREATE TABLE IF NOT EXISTS categoryItems (
     description varchar(1000) not null,
     price float not null
 );
+
+CREATE TABLE IF NOT EXISTS openstatus (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    restaurantId INT not null,
+    status varchar(20) not null
+);
