@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS reservations (
     customerId int not null,
     restaurantId int not null,
     restaurantName varchar(100) not null,
-    timeOfArrival varchar(20) not null,
+    timeOfArrival varchar(100) not null,
     amountOfGuests int not null,
     status varchar(20) not null
 );
