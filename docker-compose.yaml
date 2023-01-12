@@ -7,56 +7,8 @@ networks:
 services:
 
 
-#  restaurant-db:
-#    image: eatout/app:restaurant-db
-#    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
-#    # (this is just an example, not intended to be a production configuration)
-#    command: --default-authentication-plugin=mysql_native_password
-#    restart: always
-#    ports: [
-#      "3307:3306"
-#    ]
-#    environment:
-#      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-#
-#  reservation-db:
-#    image: eatout/app:reservation-db
-#    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
-#    # (this is just an example, not intended to be a production configuration)
-#    command: --default-authentication-plugin=mysql_native_password
-#    restart: always
-#    ports: [
-#      "3308:3306"
-#    ]
-#    environment:
-#      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-#
-#  restaurant-login-db:
-#    image: eatout/app:restaurant-login-db
-#    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
-#    # (this is just an example, not intended to be a production configuration)
-#    command: --default-authentication-plugin=mysql_native_password
-#    restart: always
-#    ports: [
-#      "3309:3306"
-#    ]
-#    environment:
-#      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-
-  customer-db:
-    build: './test-databases/customer_db/'
-    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
-    # (this is just an example, not intended to be a production configuration)
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
-    ports: [
-      "3310:3306"
-    ]
-    environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-
   restaurant-db:
-    build: './test-databases/restaurant_db/'
+    image: eatout/app:restaurant-db
     # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
     # (this is just an example, not intended to be a production configuration)
     command: --default-authentication-plugin=mysql_native_password
@@ -68,7 +20,7 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
 
   reservation-db:
-    build: './test-databases/reservation_db/'
+    image: eatout/app:reservation-db
     # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
     # (this is just an example, not intended to be a production configuration)
     command: --default-authentication-plugin=mysql_native_password
@@ -80,88 +32,148 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
 
   restaurant-login-db:
-      build: 'test-databases/restaurant_login_db/'
+    image: eatout/app:restaurant-login-db
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports: [
+      "3309:3306"
+    ]
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+
+  customer-db:
+    image: eatout/app:customer-db
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports: [
+      "3310:3306"
+    ]
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+
+ # customer-db:
+    #   build: './test-databases/customer_db/'
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
+    #  command: --default-authentication-plugin=mysql_native_password
+    #   restart: always
+      #   ports: [
+    #     "3310:3306"
+    #   ]
+      #   environment:
+  #     MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+
+    # restaurant-db:
+    #   build: './test-databases/restaurant_db/'
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
+    #   command: --default-authentication-plugin=mysql_native_password
+    #   restart: always
+      #   ports: [
+    #     "3307:3306"
+    #   ]
+      #   environment:
+  #     MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+
+    # reservation-db:
+    #   build: './test-databases/reservation_db/'
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
+    #  command: --default-authentication-plugin=mysql_native_password
+      #  restart: always
+      #  ports: [
+    #   "3308:3306"
+    #  ]
+      #  environment:
+  #    MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+
+      # restaurant-login-db:
+      #     build: 'test-databases/restaurant_login_db/'
       # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
       # (this is just an example, not intended to be a production configuration)
-      command: --default-authentication-plugin=mysql_native_password
-      restart: always
-      ports: [
-        "3309:3306"
-      ]
-      environment:
-        MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      #   command: --default-authentication-plugin=mysql_native_password
+        #    restart: always
+        #   ports: [
+      #     "3309:3306"
+      #    ]
+        #    environment:
+  #      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
 
-#  eatoutcorporate:
-#    image: eatout/app:eatoutcorporate
-#    restart: always
-#    ports: [
-#      "4200:4200"
-#    ]
-#
-#  eatoutweb:
-#    image: eatout/app:eatoutweb
-#    restart: always
-#    ports: [
-#      "4201:4200"
-#    ]
-#
-#  restaurant-service:
-#    image: eatout/app:restaurant-service
-#    restart: always
-#    ports: [
-#      "5000:5000"
-#    ]
-#  account-service:
-#    image: eatout/app:account-service
-#    restart: always
-#    ports: [
-#      "5002:5002"
-#    ]
-#
-#  reservation-service:
-#    image: eatout/app:reservation-service
-#    restart: always
-#    ports: [
-#      "5001:5001"
-#    ]
+  eatoutcorporate:
+    image: eatout/app:eatoutcorporate
+    restart: always
+    ports: [
+      "4200:4200"
+    ]
 
-#  eatout-customer-service:
-#    image: eatout/app:eatout-customer-service
-#    restart: always
-#    ports: [
-#      "5004:5004"
-#    ]
-#
-#
-#  create-reservation-socket:
-#    image: eatout/app:create-reservation-socket
-#    restart: always
-#    ports: [
-#      "5010:5010"
-#    ]
-#
-#  restaurant-new-reservations-socket:
-#    image: eatout/app:restaurant-new-reservations-socket
-#    restart: always
-#    ports: [
-#      "5011:5011"
-#    ]
-#
-#  restaurant-reply-socket:
-#    image: eatout/app:restaurant-reply-socket
-#    restart: always
-#    ports: [
-#      "5012:5012"
-#    ]
-#
-#  status-socket:
-#    image: eatout/app:status-socket
-#    restart: always
-#    ports: [
-#      "5013:5013"
-#    ]
+  eatoutweb:
+    image: eatout/app:eatout-web
+    restart: always
+    ports: [
+      "4201:4200"
+    ]
 
-#
+  restaurant-service:
+    image: eatout/app:restaurant-service
+    restart: always
+    ports: [
+      "5000:5000"
+    ]
+
+  account-service:
+    image: eatout/app:account-service
+    restart: always
+    ports: [
+      "5002:5002"
+    ]
+
+  reservation-service:
+    image: eatout/app:reservation-service
+    restart: always
+    ports: [
+      "5001:5001"
+    ]
+
+  eatout-customer-service:
+    image: eatout/app:eatout-customer-service
+    restart: always
+    ports: [
+      "5004:5004"
+    ]
+
+
+  create-reservation-socket:
+    image: eatout/app:create-reservation-socket
+    restart: always
+    ports: [
+      "5010:5010"
+    ]
+
+  restaurant-new-reservations-socket:
+    image: eatout/app:restaurant-new-reservation-socket
+    restart: always
+    ports: [
+      "5011:5011"
+    ]
+
+  restaurant-reply-socket:
+    image: eatout/app:restaurant-reply-socket
+    restart: always
+    ports: [
+      "5012:5012"
+    ]
+
+  status-socket:
+    image: eatout/app:status-socket
+    restart: always
+    ports: [
+      "5013:5013"
+    ]
+
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
