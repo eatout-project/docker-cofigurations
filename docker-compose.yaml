@@ -3,11 +3,14 @@ version: '2.2'
 networks:
   app-tier:
     driver: bridge
+  account-service-network:
+    driver: bridge
 
 services:
 
 
   restaurant-db:
+    container_name: restaurant-db
     image: eatout/app:restaurant-db
     # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
     # (this is just an example, not intended to be a production configuration)
@@ -18,8 +21,12 @@ services:
     ]
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    networks: [
+      account-service-network
+    ]
 
   reservation-db:
+    container_name: reservation-db
     image: eatout/app:reservation-db
     # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
     # (this is just an example, not intended to be a production configuration)
@@ -30,8 +37,12 @@ services:
     ]
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    networks: [
+      account-service-network
+    ]
 
   restaurant-login-db:
+    container_name: restaurant-login-db
     image: eatout/app:restaurant-login-db
     # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
     # (this is just an example, not intended to be a production configuration)
@@ -42,8 +53,12 @@ services:
     ]
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    networks: [
+      account-service-network
+    ]
 
   customer-db:
+    container_name: customer-db
     image: eatout/app:customer-db
     # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
     # (this is just an example, not intended to be a production configuration)
@@ -54,6 +69,9 @@ services:
     ]
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    networks: [
+      account-service-network
+    ]
 
  # customer-db:
     #   build: './test-databases/customer_db/'
@@ -104,10 +122,14 @@ services:
   #      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
 
   eatoutcorporate:
-    image: eatout/app:eatoutcorporate
+    image: eatout/app:corporate
     restart: always
     ports: [
       "4200:4200"
+    ]
+    networks: [
+      account-service-network,
+      app-tier
     ]
 
   eatoutweb:
@@ -116,34 +138,71 @@ services:
     ports: [
       "4201:4200"
     ]
+    networks: [
+      account-service-network,
+      app-tier
+    ]
 
   restaurant-service:
+    container_name: restaurant-service
     image: eatout/app:restaurant-service
     restart: always
     ports: [
       "5000:5000"
     ]
+    networks: [
+      account-service-network,
+      app-tier
+    ]
+    environment:
+      RESTAURANT_DB_HOST: restaurant-db
+      RESTAURANT_DB_PORT: 3306
 
   account-service:
+    container_name: account-service
     image: eatout/app:account-service
     restart: always
     ports: [
       "5002:5002"
     ]
+    networks: [
+      account-service-network,
+      app-tier
+    ]
+    environment:
+      RESTAURANT_LOGIN_DB_HOST: restaurant-login-db
+      RESTAURANT_LOGIN_DB_PORT: 3306
+      RESTAURANT_SERVICE_URL: restaurant-service
 
   reservation-service:
+    container_name: reservation-service
     image: eatout/app:reservation-service
     restart: always
     ports: [
       "5001:5001"
     ]
+    networks: [
+      account-service-network,
+      app-tier
+    ]
+    environment:
+      RESERVATION_DB_HOST: reservation-db
+      RESERVATION_DB_PORT: 3306
 
   eatout-customer-service:
+    container_name: eatout-customer-service
     image: eatout/app:eatout-customer-service
     restart: always
     ports: [
       "5004:5004"
     ]
+    networks: [
+      account-service-network,
+      app-tier
+    ]
+    environment:
+      CUSTOMER_LOGIN_DB_HOST: customer-db
+      CUSTOMER_LOGIN_DB_PORT: 3306
 
 
   create-reservation-socket:
@@ -152,6 +211,15 @@ services:
     ports: [
       "5010:5010"
     ]
+    networks: [
+      account-service-network,
+      app-tier
+    ]
+    environment:
+      KAFKA_HOST: host.docker.internal
+      KAFKA_PORT: 9092
+    depends_on:
+      - kafka
 
   restaurant-new-reservations-socket:
     image: eatout/app:restaurant-new-reservation-socket
@@ -159,6 +227,15 @@ services:
     ports: [
       "5011:5011"
     ]
+    networks: [
+      account-service-network,
+      app-tier
+    ]
+    environment:
+      KAFKA_HOST: host.docker.internal
+      KAFKA_PORT: 9092
+    depends_on:
+      - kafka
 
   restaurant-reply-socket:
     image: eatout/app:restaurant-reply-socket
@@ -166,6 +243,15 @@ services:
     ports: [
       "5012:5012"
     ]
+    networks: [
+      account-service-network,
+      app-tier
+    ]
+    environment:
+      KAFKA_HOST: host.docker.internal
+      KAFKA_PORT: 9092
+    depends_on:
+      - kafka
 
   status-socket:
     image: eatout/app:status-socket
@@ -173,6 +259,15 @@ services:
     ports: [
       "5013:5013"
     ]
+    networks: [
+      account-service-network,
+      app-tier
+    ]
+    environment:
+      KAFKA_HOST: host.docker.internal
+      KAFKA_PORT: 9092
+    depends_on:
+      - kafka
 
 
   zookeeper:
@@ -185,6 +280,10 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_SERVERS: zoo1:2888:3888
+    networks: [
+      account-service-network,
+      app-tier
+    ]
 
   kafka:
     image: confluentinc/cp-kafka:7.3.0
@@ -194,8 +293,12 @@ services:
       - "9092:9092"
       - "29092:29092"
       - "9999:9999"
+    networks: [
+      account-service-network,
+      app-tier
+    ]
     environment:
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:19092,EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092,DOCKER://host.docker.internal:29092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:19092,EXTERNAL://host.docker.internal:9092,DOCKER://host.docker.internal:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,DOCKER:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
@@ -211,4 +314,5 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
     depends_on:
       - zookeeper
+
 
