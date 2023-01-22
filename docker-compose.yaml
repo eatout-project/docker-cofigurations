@@ -133,7 +133,7 @@ services:
     ]
 
   eatoutweb:
-    image: eatout/app:eatout-web
+    image: eatout/app:eatoutweb
     restart: always
     ports: [
       "4201:4200"
@@ -222,7 +222,7 @@ services:
       - kafka
 
   restaurant-new-reservations-socket:
-    image: eatout/app:restaurant-new-reservation-socket
+    image: eatout/app:restaurant-new-reservations-socket
     restart: always
     ports: [
       "5011:5011"
