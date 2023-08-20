@@ -7,24 +7,17 @@ networks:
     driver: bridge
 
 services:
-  customer-db:
-    build: './test-databases/customer_db/'
-    #       NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
-    #    (this is just an example, not intended to be a production configuration)
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
-    environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-    networks: [
-      account-service-network
-    ]
 
   restaurant-db:
-    build: './test-databases/restaurant_db/'
-    #       NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
-    #  (this is just an example, not intended to be a production configuration)
+    container_name: restaurant-db
+    image: eatout/app:restaurant-db
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
     command: --default-authentication-plugin=mysql_native_password
     restart: always
+    ports: [
+      "3307:3306"
+    ]
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     networks: [
@@ -32,11 +25,15 @@ services:
     ]
 
   reservation-db:
-    build: './test-databases/reservation_db/'
-    #       NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
-    #  (this is just an example, not intended to be a production configuration)
+    container_name: reservation-db
+    image: eatout/app:reservation-db
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
     command: --default-authentication-plugin=mysql_native_password
     restart: always
+    ports: [
+      "3308:3306"
+    ]
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     networks: [
@@ -44,11 +41,31 @@ services:
     ]
 
   restaurant-login-db:
-    build: 'test-databases/restaurant_login_db/'
-    #       NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
-    #  (this is just an example, not intended to be a production configuration)
+    container_name: restaurant-login-db
+    image: eatout/app:restaurant-login-db
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
     command: --default-authentication-plugin=mysql_native_password
     restart: always
+    ports: [
+      "3309:3306"
+    ]
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    networks: [
+      account-service-network
+    ]
+
+  customer-db:
+    container_name: customer-db
+    image: eatout/app:customer-db
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports: [
+      "3310:3306"
+    ]
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     networks: [
@@ -56,10 +73,10 @@ services:
     ]
 
   eatoutcorporate:
-    build: '../eatout_corporate/'
+    image: eatout/app:corporate
     restart: always
     ports: [
-      "4201:80"
+      "4200:4200"
     ]
     networks: [
       account-service-network,
@@ -67,10 +84,10 @@ services:
     ]
 
   eatoutweb:
-    build: '../eatout_web/'
+    image: eatout/app:eatoutweb
     restart: always
     ports: [
-      "4200:80"
+      "4201:4200"
     ]
     networks: [
       account-service-network,
@@ -79,7 +96,7 @@ services:
 
   restaurant-service:
     container_name: restaurant-service
-    build: '../restaurant_service/'
+    image: eatout/app:restaurant-service
     restart: always
     ports: [
       "5000:5000"
@@ -94,7 +111,7 @@ services:
 
   account-service:
     container_name: account-service
-    build: '../account_service/'
+    image: eatout/app:account-service
     restart: always
     ports: [
       "5002:5002"
@@ -106,11 +123,11 @@ services:
     environment:
       RESTAURANT_LOGIN_DB_HOST: restaurant-login-db
       RESTAURANT_LOGIN_DB_PORT: 3306
-      RESTAURANT_SERVICE_URL: "http://host.docker.internal:5000"
+      RESTAURANT_SERVICE_URL: restaurant-service
 
   reservation-service:
     container_name: reservation-service
-    build: '../reservation_service/'
+    image: eatout/app:reservation-service
     restart: always
     ports: [
       "5001:5001"
@@ -125,7 +142,7 @@ services:
 
   eatout-customer-service:
     container_name: eatout-customer-service
-    build: '../eatout-customer-service/'
+    image: eatout/app:eatout-customer-service
     restart: always
     ports: [
       "5004:5004"
@@ -140,8 +157,7 @@ services:
 
 
   create-reservation-socket:
-    container_name: create-reservation-socket
-    build: '../eatout_websocket_servers/create_reservation_socket/'
+    image: eatout/app:create-reservation-socket
     restart: always
     ports: [
       "5010:5010"
@@ -157,8 +173,7 @@ services:
       - kafka
 
   restaurant-new-reservations-socket:
-    container_name: restaurant-new-reservations-socket
-    build: '../eatout_websocket_servers/restaurant_new_reservations_socket/'
+    image: eatout/app:restaurant-new-reservations-socket
     restart: always
     ports: [
       "5011:5011"
@@ -174,8 +189,7 @@ services:
       - kafka
 
   restaurant-reply-socket:
-    container_name: restaurant-reply-socket
-    build: '../eatout_websocket_servers/restaurant_reply_socket/'
+    image: eatout/app:restaurant-reply-socket
     restart: always
     ports: [
       "5012:5012"
@@ -191,8 +205,7 @@ services:
       - kafka
 
   status-socket:
-    container_name: status-socket
-    build: '../eatout_websocket_servers/status_socket/'
+    image: eatout/app:status-socket
     restart: always
     ports: [
       "5013:5013"

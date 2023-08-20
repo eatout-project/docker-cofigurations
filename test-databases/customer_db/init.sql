@@ -17,5 +17,6 @@ CREATE TABLE IF NOT EXISTS customers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email varchar(100),
     firstName varchar(100),
-    lastName varchar(100)
+    lastName varchar(100),
+    phone varchar(8)
 );

@@ -7,6 +7,7 @@ networks:
     driver: bridge
 
 services:
+
   customer-db:
     build: './test-databases/customer_db/'
     #       NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
@@ -18,6 +19,8 @@ services:
     networks: [
       account-service-network
     ]
+    ports:
+      - "3307:3306"
 
   restaurant-db:
     build: './test-databases/restaurant_db/'
@@ -30,6 +33,8 @@ services:
     networks: [
       account-service-network
     ]
+    ports:
+      - "3307:3306"
 
   reservation-db:
     build: './test-databases/reservation_db/'
@@ -42,6 +47,8 @@ services:
     networks: [
       account-service-network
     ]
+    ports:
+      - "3307:3306"
 
   restaurant-login-db:
     build: 'test-databases/restaurant_login_db/'
@@ -54,159 +61,8 @@ services:
     networks: [
       account-service-network
     ]
-
-  eatoutcorporate:
-    build: '../eatout_corporate/'
-    restart: always
-    ports: [
-      "4201:80"
-    ]
-    networks: [
-      account-service-network,
-      app-tier
-    ]
-
-  eatoutweb:
-    build: '../eatout_web/'
-    restart: always
-    ports: [
-      "4200:80"
-    ]
-    networks: [
-      account-service-network,
-      app-tier
-    ]
-
-  restaurant-service:
-    container_name: restaurant-service
-    build: '../restaurant_service/'
-    restart: always
-    ports: [
-      "5000:5000"
-    ]
-    networks: [
-      account-service-network,
-      app-tier
-    ]
-    environment:
-      RESTAURANT_DB_HOST: restaurant-db
-      RESTAURANT_DB_PORT: 3306
-
-  account-service:
-    container_name: account-service
-    build: '../account_service/'
-    restart: always
-    ports: [
-      "5002:5002"
-    ]
-    networks: [
-      account-service-network,
-      app-tier
-    ]
-    environment:
-      RESTAURANT_LOGIN_DB_HOST: restaurant-login-db
-      RESTAURANT_LOGIN_DB_PORT: 3306
-      RESTAURANT_SERVICE_URL: "http://host.docker.internal:5000"
-
-  reservation-service:
-    container_name: reservation-service
-    build: '../reservation_service/'
-    restart: always
-    ports: [
-      "5001:5001"
-    ]
-    networks: [
-      account-service-network,
-      app-tier
-    ]
-    environment:
-      RESERVATION_DB_HOST: reservation-db
-      RESERVATION_DB_PORT: 3306
-
-  eatout-customer-service:
-    container_name: eatout-customer-service
-    build: '../eatout-customer-service/'
-    restart: always
-    ports: [
-      "5004:5004"
-    ]
-    networks: [
-      account-service-network,
-      app-tier
-    ]
-    environment:
-      CUSTOMER_LOGIN_DB_HOST: customer-db
-      CUSTOMER_LOGIN_DB_PORT: 3306
-
-
-  create-reservation-socket:
-    container_name: create-reservation-socket
-    build: '../eatout_websocket_servers/create_reservation_socket/'
-    restart: always
-    ports: [
-      "5010:5010"
-    ]
-    networks: [
-      account-service-network,
-      app-tier
-    ]
-    environment:
-      KAFKA_HOST: host.docker.internal
-      KAFKA_PORT: 9092
-    depends_on:
-      - kafka
-
-  restaurant-new-reservations-socket:
-    container_name: restaurant-new-reservations-socket
-    build: '../eatout_websocket_servers/restaurant_new_reservations_socket/'
-    restart: always
-    ports: [
-      "5011:5011"
-    ]
-    networks: [
-      account-service-network,
-      app-tier
-    ]
-    environment:
-      KAFKA_HOST: host.docker.internal
-      KAFKA_PORT: 9092
-    depends_on:
-      - kafka
-
-  restaurant-reply-socket:
-    container_name: restaurant-reply-socket
-    build: '../eatout_websocket_servers/restaurant_reply_socket/'
-    restart: always
-    ports: [
-      "5012:5012"
-    ]
-    networks: [
-      account-service-network,
-      app-tier
-    ]
-    environment:
-      KAFKA_HOST: host.docker.internal
-      KAFKA_PORT: 9092
-    depends_on:
-      - kafka
-
-  status-socket:
-    container_name: status-socket
-    build: '../eatout_websocket_servers/status_socket/'
-    restart: always
-    ports: [
-      "5013:5013"
-    ]
-    networks: [
-      account-service-network,
-      app-tier
-    ]
-    environment:
-      KAFKA_HOST: host.docker.internal
-      KAFKA_PORT: 9092
-    depends_on:
-      - kafka
-
+    ports:
+      - "3307:3306"
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
@@ -252,5 +108,3 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
     depends_on:
       - zookeeper
-
-
